@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-FROM debian:jessie
+FROM ubuntu:12.04
 
 # explicitly set user/group IDs
 RUN groupadd -r postgres --gid=999 && useradd -r -g postgres --uid=999 postgres
@@ -28,9 +28,9 @@ RUN mkdir /docker-entrypoint-initdb.d
 RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
 
 ENV PG_MAJOR 9.1
-ENV PG_VERSION 9.1.22-1.pgdg80+1
+ENV PG_VERSION 9.1.22-1.pgdg12.4+1
 
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
 RUN apt-get update \
 	&& apt-get install -y postgresql-common \
@@ -38,6 +38,7 @@ RUN apt-get update \
 	&& apt-get install -y \
 		postgresql-$PG_MAJOR=$PG_VERSION \
 		postgresql-contrib-$PG_MAJOR=$PG_VERSION \
+        && apt-get install -y postgresql-9.1-postgis \
 	&& rm -rf /var/lib/apt/lists/*
 
 # make the sample config easier to munge (and "correct by default")
